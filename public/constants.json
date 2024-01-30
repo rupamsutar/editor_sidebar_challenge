@@ -1,0 +1,23 @@
+[
+  {
+    "type": "folder",
+    "title": "root",
+    "children": [
+      {
+        "type": "folder",
+        "title": "public",
+        "children": [
+          {
+            "type": "file",
+            "title": "index.html"
+          }
+        ]
+      },
+      {
+        "type": "folder",
+        "title": "src",
+        "children": []
+      }
+    ]
+  }
+]
