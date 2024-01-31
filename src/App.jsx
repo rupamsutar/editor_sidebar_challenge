@@ -1,62 +1,24 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import React, { useState } from "react";
+import explorer from "./data/folderData";
+import Folder from "./components/Folder";
+import useTraverseTree from "./hooks/use-traverse-tree";
 
-const FileStructure = ({ type, title, children }) => {
-  const [showChildren, setShowChildren] = useState(false);
-  const [updatedChildren, setUpdatedChildren] = useState(children);
-  const [addField, showAddField] = useState(null);
-  return (
-    <>
-      <div className="ml-5  px-2 py-1 w-fit">
-        {addField && (
-          <div className="flex">
-            form
-            <input type="text" />
-          </div>
-        )}
-        <div
-          className="flex gap-10 border-2 border-gray-400"
-          onClick={(e) => {
-            if (e.target.tagName === "DIV") setShowChildren(!showChildren);
-          }}
-        >
-          <div
-            className={`${type === "folder" && "bg-red-400"} ${
-              type === "file" && "bg-blue-400"
-            }`}
-          >
-            {type}
-          </div>
-          <div className="">{title}</div>
-          <button>Add File</button>
-          <button>Add Folder</button>
-        </div>
-        {showChildren &&
-          children?.map((el, i) => {
-            return <FileStructure key={i} {...el} />;
-          })}
-      </div>
-    </>
-  );
-};
+export default function App() {
+  const [explorerData, setExplorerData] = useState(explorer);
 
-function App() {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    fetch("/constants.json").then((res) => {
-      res.json().then((newRes) => {
-        setData(newRes);
-      });
-    });
-  }, []);
+  const { insertNode } = useTraverseTree();
+
+  function handlerInsertNode(folderId, item, isFolder) {
+    const finalTree = insertNode(explorerData, folderId, item, isFolder);
+    setExplorerData(finalTree);
+  }
 
   return (
     <>
-      {data.map((el, i) => {
-        return <FileStructure key={i} {...el} />;
-      })}
+      <Folder
+        handlerInsertNode={handlerInsertNode}
+        explorerData={explorerData}
+      />
     </>
   );
 }
-
-export default App;
